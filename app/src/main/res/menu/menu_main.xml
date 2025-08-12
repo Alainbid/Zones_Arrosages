@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.alain.myapplicationbidon.MainActivity">
+
+    <item
+        android:id="@+id/adjust"
+        android:enabled="true"
+        android:icon="@drawable/tool_jaune"
+        android:menuCategory="alternative"
+        android:orderInCategory="2"
+        android:title="ajuster"
+        android:tooltipText="Ajustement saisonnier"
+        android:visible="true"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/trash"
+        android:contentDescription="effacer les programmes"
+        android:enabled="true"
+        android:icon="@drawable/delete"
+        android:orderInCategory="3"
+        android:title="@string/action_delete"
+        android:tooltipText="Effacer toutes les programmations"
+        android:visible="true"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/manuel"
+        android:contentDescription="effacer les programmes"
+        android:enabled="true"
+        android:icon="@drawable/manuel"
+        android:orderInCategory="1"
+        android:title="@string/immediat"
+        android:tooltipText="Arrosage immediat"
+        android:visible="true"
+        app:showAsAction="always" />
+</menu>

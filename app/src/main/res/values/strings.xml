@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Zones Arrosages</string>
+        <string name="potager_arrosage">" Potager arrosage à "</string>
+        <string name="parking_arrosage">" Parking arrosage à "</string>
+        <string name="portillon_arrosage">" Portillon arrosage à "</string>
+        <string name="grand_tour_arrosage">" Grand tour arrosage à "</string>
+        <string name="pas_de_connexion">Pas de connexion</string>
+        <string name="relancer">Relancer</string>
+        <string name="attente_de_connexion_bluetooth">attente de connexion Bluetooth</string>
+        <string name="programmer_le_potager">programmer le potager</string>
+        <string name="programmer_le_parking">programmer le parking</string>
+        <string name="programmer_le_portillon">programmer le portillon</string>
+        <string name="programmer_le_grand_tour">programmer le grand tour</string>
+        <string name="programmation_zone">programmation Zone</string>
+        <string name="nombre_d_arrosages_par_24h">Nombre d\'arrosages par 24h</string>
+        <string name="_1_fois">1 fois</string>
+        <string name="_2_fois">2 fois</string>
+        <string name="_3_fois">3 fois</string>
+        <string name="arrosage_1">Arrosage 1 à</string>
+        <string name="hhhmm">HHhMM</string>
+        <string name="_00">00</string>
+        <string name="_000">000</string>
+        <string name="h">h</string>
+        <string name="mn">mn</string>
+        <string name="arrosage_2">Arrosage 2 à</string>
+        <string name="mn_dur_e">  pendant</string>
+        <string name="arrosage_3">Arrosage 3 à</string>
+        <string name="valider">Enregistrer</string>
+        <string name="image">image</string>
+        <string name="enregistrer">ENREGISTRER</string>
+        <string name="action_delete">delete</string>
+        <string name="action_close">close</string>
+        <string name="fermer">fermer</string>
+        <string name="hc05">HC-05</string>
+        <string name="esp32">ESP32</string>
+        <string name="relancercon">relancer la connexion...</string>
+        <string name="immediat">Arrosage immediat</string>
+        <!-- Strings related to login -->
+        <string name="prompt_email">Email</string>
+        <string name="prompt_password">Password</string>
+        <string name="action_sign_in">Sign in or register</string>
+        <string name="action_sign_in_short">Sign in</string>
+        <string name="welcome">"Welcome!"</string>
+        <string name="invalid_username">Not a valid username</string>
+        <string name="invalid_password">Password must be >5 characters</string>
+        <string name="login_failed">"Login failed"</string>
+    <string name="esp32_heure">"ESP32 heure : "</string>
+</resources>

@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerHorizontal="true"
+    android:accessibilityTraversalAfter="@id/debut1mn"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/programmationZone"
+        android:layout_width="349dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="8dp"
+        android:elegantTextHeight="true"
+        android:text="@string/programmation_zone"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/textViewFois"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <TextView
+        android:id="@+id/textViewFois"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="@string/nombre_d_arrosages_par_24h"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/programmationZone" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:background="#E8E5E5"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.549"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewFois">
+
+        <RadioButton
+            android:id="@+id/rd_1fois"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginVertical="8dp"
+            android:checked="true"
+            android:defaultFocusHighlightEnabled="false"
+            android:focusedByDefault="false"
+            android:selectAllOnFocus="false"
+            android:text="@string/_1_fois"
+            android:textAlignment="viewStart" />
+
+        <RadioButton
+            android:id="@+id/rd_2fois"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginVertical="8dp"
+            android:text="@string/_2_fois"
+            android:textAlignment="viewStart" />
+
+        <RadioButton
+            android:id="@+id/rd_3fois"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginVertical="8dp"
+            android:text="@string/_3_fois"
+            android:textAlignment="viewStart" />
+    </RadioGroup>
+
+
+    <TextView
+        android:id="@+id/debut11fois"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="34dp"
+        android:layout_marginTop="44dp"
+        android:text="@string/arrosage_1"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+    <EditText
+        android:id="@+id/debut1heure"
+        android:layout_width="30dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="8dp"
+        android:autofillHints=""
+        android:background="#E8E5E5"
+
+        android:ems="8"
+        android:fitsSystemWindows="false"
+
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:selectAllOnFocus="true"
+        android:text="@string/_00"
+        android:textAlignment="center"
+        app:layout_constraintBaseline_toBaselineOf="@+id/debut11fois"
+        app:layout_constraintStart_toEndOf="@+id/debut11fois" />
+
+    <TextView
+        android:id="@+id/debut1hr"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:text="@string/h"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/debut1heure"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+    <EditText
+        android:id="@+id/debut1mn"
+        android:layout_width="30dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="4dp"
+        android:background="#E8E5E5"
+        android:ems="8"
+        android:fitsSystemWindows="false"
+         android:autofillHints=""
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:digits="0123456789"
+        android:selectAllOnFocus="true"
+        android:text="@string/_00"
+        android:textAlignment="center"
+        app:layout_constraintBaseline_toBaselineOf="@+id/debut11fois"
+        app:layout_constraintStart_toEndOf="@+id/debut1hr" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="@string/mn_dur_e"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/debut11fois"
+        app:layout_constraintStart_toEndOf="@+id/debut1mn" />
+
+    <EditText
+        android:id="@+id/duration1"
+        android:layout_width="34dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="4dp"
+        android:background="#E8E5E5"
+        android:ems="10"
+        android:autofillHints=""
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:digits="0123456789"
+        android:selectAllOnFocus="true"
+        android:text="@string/_000"
+        android:textSize="16sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView11"
+        app:layout_constraintStart_toEndOf="@+id/textView11" />
+
+    <TextView
+        android:id="@+id/textView111"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="@string/mn"
+        app:layout_constraintBaseline_toBaselineOf="@+id/duration1"
+        app:layout_constraintStart_toEndOf="@+id/duration1" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout2"
+        android:layout_width="361dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="40dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/debut11fois">
+
+        <TextView
+            android:id="@+id/debut22fois"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="34dp"
+            android:layout_marginTop="22dp"
+            android:text="@string/arrosage_2"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/textView42"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="2dp"
+            android:text="@string/mn_dur_e"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/debut22fois"
+            app:layout_constraintStart_toEndOf="@+id/debut2mn" />
+
+        <EditText
+            android:id="@+id/debut2heure"
+            android:layout_width="30dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:background="#E8E5E5"
+            android:ems="8"
+            android:autofillHints=""
+            android:fitsSystemWindows="false"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:digits="0123456789"
+            android:selectAllOnFocus="true"
+            android:text="@string/_00"
+            android:textAlignment="center"
+            app:layout_constraintBaseline_toBaselineOf="@+id/debut22fois"
+            app:layout_constraintStart_toEndOf="@+id/debut22fois" />
+
+        <EditText
+            android:id="@+id/debut2mn"
+            android:layout_width="30dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="4dp"
+            android:background="#E8E5E5"
+            android:ems="8"
+            android:fitsSystemWindows="false"
+             android:autofillHints=""
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:digits="0123456789"
+            android:selectAllOnFocus="true"
+            android:text="@string/_00"
+            android:textAlignment="center"
+            app:layout_constraintBaseline_toBaselineOf="@+id/debut22fois"
+            app:layout_constraintStart_toEndOf="@+id/debut2hr" />
+
+        <TextView
+            android:id="@+id/debut2hr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/h"
+            android:textSize="16sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/debut22fois"
+            app:layout_constraintStart_toEndOf="@+id/debut2heure" />
+
+
+        <EditText
+            android:id="@+id/duration2"
+            android:layout_width="34dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:background="#E8E5E5"
+            android:ems="10"
+            android:autofillHints=""
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:digits="0123456789"
+            android:selectAllOnFocus="true"
+            android:text="@string/_000"
+            android:textSize="16sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView42"
+            app:layout_constraintStart_toEndOf="@+id/textView42" />
+
+        <TextView
+            android:id="@+id/textView52"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mn"
+            app:layout_constraintBaseline_toBaselineOf="@+id/duration2"
+            app:layout_constraintStart_toEndOf="@+id/duration2" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout3"
+        android:layout_width="match_parent"
+        android:layout_height="111dp"
+        android:layout_marginTop="8dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout2">
+
+        <TextView
+            android:id="@+id/debut33fois"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="34dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/arrosage_3"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/debut3heure"
+            android:layout_width="30dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:background="#E8E5E5"
+            android:ems="8"
+            android:fitsSystemWindows="false"
+             android:autofillHints=""
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:digits="0123456789"
+            android:selectAllOnFocus="true"
+            android:text="@string/_00"
+            android:textAlignment="center"
+            app:layout_constraintBaseline_toBaselineOf="@+id/debut33fois"
+            app:layout_constraintStart_toEndOf="@+id/debut33fois" />
+
+
+        <TextView
+            android:id="@+id/debut3hr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/h"
+            android:textSize="16sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/debut3mn"
+            app:layout_constraintStart_toEndOf="@+id/debut3heure" />
+
+
+        <EditText
+            android:id="@+id/debut3mn"
+            android:layout_width="30dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="4dp"
+            android:background="#E8E5E5"
+            android:ems="8"
+            android:fitsSystemWindows="false"
+             android:autofillHints=""
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:digits="0123456789"
+            android:selectAllOnFocus="true"
+            android:text="@string/_00"
+            android:textAlignment="center"
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView4"
+            app:layout_constraintStart_toEndOf="@+id/debut3hr" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/mn_dur_e"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/debut33fois"
+            app:layout_constraintStart_toEndOf="@+id/debut3mn" />
+
+        <EditText
+            android:id="@+id/duration3"
+            android:layout_width="34dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:background="#E8E5E5"
+            android:ems="10"
+            android:autofillHints=""
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:digits="0123456789"
+            android:selectAllOnFocus="true"
+            android:text="@string/_000"
+            android:textSize="16sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView4"
+            app:layout_constraintStart_toEndOf="@+id/textView4" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mn"
+            app:layout_constraintBaseline_toBaselineOf="@+id/duration3"
+            app:layout_constraintStart_toEndOf="@+id/duration3" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

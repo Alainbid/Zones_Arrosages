@@ -24,8 +24,9 @@ class ProgrammingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_programming)
-        val table = arrayOf("Potager", "Parking", "Portillon", "Grand Tour")
-        timeUtils = TimeUtils(this)//class for converting in seconds
+        // noms des zones définis une seule fois dans strings.xml (noms_zones)
+        val table = resources.getStringArray(R.array.noms_zones)
+        timeUtils = TimeUtils() // conversion en secondes et contrôle des saisies
 
         val zoneId = intent.getIntExtra("ZONE_ID", 0)
 

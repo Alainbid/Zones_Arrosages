@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Zones Arrosages</string>
-        <string name="potager_arrosage">" Potager arrosage à "</string>
-        <string name="parking_arrosage">" Parking arrosage à "</string>
-        <string name="portillon_arrosage">" Portillon arrosage à "</string>
-        <string name="grand_tour_arrosage">" Grand tour arrosage à "</string>
+    <!-- noms des 4 zones, dans l'ordre des relais 1 à 4 -->
+    <string-array name="noms_zones">
+        <item>Potager</item>
+        <item>Parking</item>
+        <item>Portillon</item>
+        <item>Grand Tour</item>
+    </string-array>
         <string name="pas_de_connexion">Pas de connexion</string>
         <string name="relancer">Relancer</string>
         <string name="attente_de_connexion_bluetooth">attente de connexion Bluetooth</string>
@@ -37,13 +40,5 @@
         <string name="relancercon">relancer la connexion...</string>
         <string name="immediat">Arrosage immediat</string>
         <!-- Strings related to login -->
-        <string name="prompt_email">Email</string>
-        <string name="prompt_password">Password</string>
-        <string name="action_sign_in">Sign in or register</string>
-        <string name="action_sign_in_short">Sign in</string>
-        <string name="welcome">"Welcome!"</string>
-        <string name="invalid_username">Not a valid username</string>
-        <string name="invalid_password">Password must be >5 characters</string>
-        <string name="login_failed">"Login failed"</string>
     <string name="esp32_heure">"ESP32 heure : "</string>
 </resources>

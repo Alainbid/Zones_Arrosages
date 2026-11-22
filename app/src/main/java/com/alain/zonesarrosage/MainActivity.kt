@@ -30,9 +30,6 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
 
-var messageBT = ""
-private var ajustement = "000"
-
 // limites des saisies avant envoi à l'ESP32
 private const val AJUSTEMENT_MIN = 1     // ajustement saisonnier en %
 private const val AJUSTEMENT_MAX = 300
@@ -46,7 +43,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var resultat2: TextView
     private lateinit var resultat3: TextView
     private lateinit var resultat4: TextView
-    private val tableNomZones = arrayOf("Potager", "Parking", "Portillon", "Grand Tour")
+    // noms des zones définis une seule fois dans strings.xml (noms_zones)
+    private val tableNomZones: Array<String> by lazy { resources.getStringArray(R.array.noms_zones) }
+
+    // Programmes lus dans l'EEPROM de l'ESP32 puis complétés par les reprogrammations.
+    // Propre à cet écran : repart vide à chaque ouverture, pour ne jamais renvoyer
+    // les programmes d'une session précédente
+    private var messageBT = ""
+    // ajustement saisonnier lu dans l'ESP32 (en %), affiché dans la fenêtre d'ajustement
+    private var ajustement = "000"
     private lateinit var bluetoothManager: BluetoothManager
 
 
@@ -315,6 +320,8 @@ class MainActivity : AppCompatActivity() {
                         lifecycleScope.launch {
                             Log.d("---------trash-", "trash = lettre z")
                             if (envoyer("z")) {
+                                // l'ESP32 est vide : on oublie aussi les programmes en mémoire
+                                messageBT = ""
                                 "".also { resultat1.text = it }
                                 "".also { resultat2.text = it }
                                 "".also { resultat3.text = it }

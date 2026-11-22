@@ -1,12 +1,11 @@
 package com.alain.zonesarrosage
 
-import android.content.Context
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.widget.EditText
 
-class TimeUtils(private val context: Context) {
+class TimeUtils {
 
     fun convertToSeconds(time: Int, type: Int): Int {
         // type = 0 : conversion des minutes, type = 1 : conversion des heures

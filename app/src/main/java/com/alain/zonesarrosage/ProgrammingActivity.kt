@@ -2,18 +2,15 @@ package com.alain.zonesarrosage
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import com.alain.zonesarrosage.R.color
 
 
 class ProgrammingActivity : AppCompatActivity() {
@@ -75,37 +72,10 @@ class ProgrammingActivity : AppCompatActivity() {
         }
 
 
-        editTextDuration1.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                programmationZone.text = getString(R.string.enregistrer)
-                programmationZone.textSize= 24F
-                programmationZone.width = 800
-                programmationZone.setBackgroundColor(
-                    ContextCompat.getColor(
-                        applicationContext,
-                        color.teal_700
-                    )
-                )
-                programmationZone.setTextColor(
-                    ContextCompat.getColor(
-                        applicationContext,
-                        color.white
-                    )
-                )
-            }
-        })
-
 //----------------------------------------------------
-        programmationZone.setOnClickListener {
-            //si on clique sur le titre on valide toutes les valeurs
+        // Le bouton ENREGISTRER est toujours visible : il valide toutes les valeurs
+        // (le retour arrière du téléphone annule sans rien modifier)
+        findViewById<Button>(R.id.btnEnregistrer).setOnClickListener {
             // Chaque champ est vérifié : en cas de valeur vide ou hors limites,
             // on affiche l'erreur et on reste sur l'écran (pas de plantage, rien n'est envoyé)
             val champs = listOf(

@@ -19,14 +19,12 @@ class ProgrammingActivity : AppCompatActivity() {
     private lateinit var rd3fois: RadioButton
     private lateinit var layout2: ConstraintLayout
     private lateinit var layout3: ConstraintLayout
-    private lateinit var timeUtils: TimeUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_programming)
         // noms des zones définis une seule fois dans strings.xml (noms_zones)
         val table = resources.getStringArray(R.array.noms_zones)
-        timeUtils = TimeUtils() // conversion en secondes et contrôle des saisies
 
         val zoneId = intent.getIntExtra("ZONE_ID", 0)
 
@@ -43,15 +41,15 @@ class ProgrammingActivity : AppCompatActivity() {
         val debut1h = findViewById<EditText>(R.id.debut1heure)
         val debut2h = findViewById<EditText>(R.id.debut2heure)
         val debut3h = findViewById<EditText>(R.id.debut3heure)
-        timeUtils.setupEditHeures(debut1h)
-        timeUtils.setupEditHeures(debut2h)
-        timeUtils.setupEditHeures(debut3h)
+        TimeUtils.setupEditHeures(debut1h)
+        TimeUtils.setupEditHeures(debut2h)
+        TimeUtils.setupEditHeures(debut3h)
         val debut1mn = findViewById<EditText>(R.id.debut1mn)
         val debut2mn = findViewById<EditText>(R.id.debut2mn)
         val debut3mn = findViewById<EditText>(R.id.debut3mn)
-        timeUtils.setupEditMinutes(debut1mn)
-        timeUtils.setupEditMinutes(debut2mn)
-        timeUtils.setupEditMinutes(debut3mn)
+        TimeUtils.setupEditMinutes(debut1mn)
+        TimeUtils.setupEditMinutes(debut2mn)
+        TimeUtils.setupEditMinutes(debut3mn)
         var nombreDeFois = 1
 
         rd1fois.setOnClickListener {
@@ -93,7 +91,7 @@ class ProgrammingActivity : AppCompatActivity() {
                 val minute = lireNombre(champMn, 0, 59, "Les minutes") ?: return@setOnClickListener
                 val duree = lireNombre(champDuree, 0, 999, "La durée") ?: return@setOnClickListener
 
-                val departS = timeUtils.convertToSeconds(heure, 1) + timeUtils.convertToSeconds(minute, 0)
+                val departS = TimeUtils.heuresEnSecondes(heure) + TimeUtils.minutesEnSecondes(minute)
                 val dureeS = duree * 60
                 val hh = heure.toString().padStart(2, '0')
                 val mm = minute.toString().padStart(2, '0')

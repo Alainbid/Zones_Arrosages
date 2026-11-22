@@ -1,8 +1,6 @@
 package com.alain.zonesarrosage
 
 import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
@@ -11,31 +9,10 @@ import android.widget.EditText
 class TimeUtils(private val context: Context) {
 
     fun convertToSeconds(time: Int, type: Int): Int {
-        //if type = 0 conversion des mn  1 conversion des heures
-        if (type == 1) {
-// conversion des heures en secondes
-            Log.d("-----------------", "Heures = $time")
-            return if (time > 23 || time == 0) {
-                Log.d(" ------------------  time  ","$time")
-                Toast.makeText(context, "Heure ne peut dépasser 23h.", Toast.LENGTH_SHORT).show()
-                1000
-            } else {
-                time * 3600
-            } // heure en secondes
-
-// conversion des mn en secondes
-        } else {
-            val mn: Int
-            if (time > 59) {
-                Toast.makeText(context, "La durée maximum est de 60mn.", Toast.LENGTH_SHORT).show()
-                mn = 59 * 60
-                Log.d("--------------", "mn  $mn")
-            } else {
-                mn = time * 60
-                Log.d("-----------------", "durée = $mn")
-            }
-            return mn
-        }
+        // type = 0 : conversion des minutes, type = 1 : conversion des heures
+        // Les valeurs sont validées avant l'appel (heure 0..23, minutes 0..59)
+        // dans ProgrammingActivity.lireNombre() ; 0h est une heure valide.
+        return if (type == 1) time * 3600 else time * 60
     }
 
 

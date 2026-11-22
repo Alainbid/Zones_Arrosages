@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -146,6 +148,8 @@ class MainActivity : AppCompatActivity() {
         // Set the layout to activity_loading
         setContentView(R.layout.activity_loading)
 
+        // fermer l'ancien socket avant de se reconnecter
+        bluetoothManager.closeConnexion()
         // Attempt to reconnect to the device
         bluetoothManager.connectToDevice(deviceName)
     }
@@ -157,11 +161,6 @@ class MainActivity : AppCompatActivity() {
         resultat2 = findViewById(R.id.resultat2)
         resultat3 = findViewById(R.id.resultat3)
         resultat4 = findViewById(R.id.resultat4)
-        val imageView1 = findViewById<ImageView>(R.id.imageView1)
-        val imageView2 = findViewById<ImageView>(R.id.imageView2)
-        val imageView3 = findViewById<ImageView>(R.id.imageView3)
-        val imageView4 = findViewById<ImageView>(R.id.imageView4)
-
 
         resultat1.text = buildString {
             append("Programmer le ")
@@ -185,48 +184,51 @@ class MainActivity : AppCompatActivity() {
             ResourcesCompat.getDrawable(resources, teal_700, null)
         )
 
-        findViewById<View>(R.id.zone1).setOnClickListener {
-            "".also { resultat1.text = it }
-            effacerValeurEnMemoire(1)
-            imageView1.setImageResource(R.drawable.potagerfiltre)
-            openProgrammingActivity(1)
-        }
-
-        findViewById<View>(R.id.zone2).setOnClickListener {
-            "".also { resultat2.text = it }
-            effacerValeurEnMemoire(2)
-            imageView2.setImageResource(R.drawable.parkingfiltre)
-            openProgrammingActivity(2)
-        }
-
-        findViewById<View>(R.id.zone3).setOnClickListener {
-            "".also { resultat3.text = it }
-            effacerValeurEnMemoire(3)
-            imageView3.setImageResource(R.drawable.portillonfiltre)
-            openProgrammingActivity(3)
-        }
-
-        findViewById<View>(R.id.zone4).setOnClickListener {
-            "".also { resultat4.text = it }
-            effacerValeurEnMemoire(4)
-            imageView4.setImageResource(R.drawable.grandtourfiltre)
-            openProgrammingActivity(4)
-        }
+        // L'ancienne programmation de la zone n'est effacée qu'au retour
+        // validé de ProgrammingActivity (voir programmingActivityResultLauncher)
+        findViewById<View>(R.id.zone1).setOnClickListener { openProgrammingActivity(1) }
+        findViewById<View>(R.id.zone2).setOnClickListener { openProgrammingActivity(2) }
+        findViewById<View>(R.id.zone3).setOnClickListener { openProgrammingActivity(3) }
+        findViewById<View>(R.id.zone4).setOnClickListener { openProgrammingActivity(4) }
         "".also { resultat1.text = it }
         "".also { resultat2.text = it }
         "".also { resultat3.text = it }
         "".also { resultat4.text = it }
 
-        //la lettre 'a'  demande la lecture de EEPROM  du ESP32
-        bluetoothManager.sendMessage("a")
-
-        Thread.sleep(2000)
-        val x = bluetoothManager.receiveMessage().toString()
-        messageBT = x
-        Log.d("-------  xxx --", x)
-        //affichage du résultat
-        processResponse(x)
+        // la lettre 'a' demande la lecture de l'EEPROM de l'ESP32
+        // La réponse est attendue en tâche de fond : l'écran reste utilisable
+        lifecycleScope.launch {
+            bluetoothManager.viderReception()
+            if (!bluetoothManager.sendMessage("a")) {
+                Toast.makeText(this@MainActivity, "Impossible d'interroger l'ESP32", Toast.LENGTH_LONG).show()
+                return@launch
+            }
+            val x = bluetoothManager.receiveMessage()
+            // la connexion a pu être perdue pendant l'attente (autre écran affiché)
+            if (findViewById<TextView>(R.id.heure) == null) return@launch
+            if (x.isEmpty()) {
+                Toast.makeText(this@MainActivity, "Aucune réponse de l'ESP32", Toast.LENGTH_LONG).show()
+                return@launch
+            }
+            messageBT = x
+            Log.d("-------  xxx --", x)
+            //affichage du résultat
+            processResponse(x)
+        }
     }//fin initialize
+
+    override fun onDestroy() {
+        // fermer le socket et arrêter la lecture quand l'application se ferme
+        if (::bluetoothManager.isInitialized) bluetoothManager.closeConnexion()
+        super.onDestroy()
+    }
+
+    /** Envoie [message] et affiche une erreur si l'envoi échoue. */
+    private suspend fun envoyer(message: String): Boolean {
+        val ok = bluetoothManager.sendMessage(message)
+        if (!ok) Toast.makeText(this, "Echec de l'envoi à l'ESP32", Toast.LENGTH_LONG).show()
+        return ok
+    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -252,8 +254,8 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         val adjustedValue = "%$deb"
                         Log.d("---------deb --", adjustedValue)
-                        bluetoothManager.sendMessage(adjustedValue)
-                        finishAndRemoveTask()
+                        // on ne ferme l'application que si l'envoi a réussi
+                        if (envoyer(adjustedValue)) finishAndRemoveTask()
                     }
                 }
                 true
@@ -268,7 +270,9 @@ class MainActivity : AppCompatActivity() {
                         Log.d("--------- quelle Zone --", adjustedValue)
 
                         // Envoyer la commande via Bluetooth
-                        bluetoothManager.sendMessage(adjustedValue)
+                        if (envoyer(adjustedValue)) {
+                            Toast.makeText(this@MainActivity, "Arrosage manuel lancé", Toast.LENGTH_SHORT).show()
+                        }
                     } else {
                         Toast.makeText(this@MainActivity, "ANNULATION...Choisir une zone et une durée", Toast.LENGTH_LONG).show()
                     }
@@ -280,13 +284,24 @@ class MainActivity : AppCompatActivity() {
                 // méthode pour mettre 0 an EEPROM
                 // "z" comme caractère initial
                 //raz des zones
-                Log.d("---------trash-", "trash = lettre z")
-                bluetoothManager.sendMessage("z")
-                "".also { resultat1.text = it }
-                "".also { resultat2.text = it }
-                "".also { resultat3.text = it }
-                "".also { resultat4.text = it }
-                finishAndRemoveTask()
+                // action irréversible : on demande confirmation
+                Builder(this)
+                    .setTitle("Effacer les programmations")
+                    .setMessage("Effacer toutes les programmations des 4 zones dans l'ESP32 ?")
+                    .setPositiveButton("Effacer") { _, _ ->
+                        lifecycleScope.launch {
+                            Log.d("---------trash-", "trash = lettre z")
+                            if (envoyer("z")) {
+                                "".also { resultat1.text = it }
+                                "".also { resultat2.text = it }
+                                "".also { resultat3.text = it }
+                                "".also { resultat4.text = it }
+                                finishAndRemoveTask()
+                            }
+                        }
+                    }
+                    .setNegativeButton("Annuler", null)
+                    .show()
                 return true
             }
 
@@ -305,8 +320,8 @@ class MainActivity : AppCompatActivity() {
     fun onBluetoothDisconnected() {
         Toast.makeText(this, "Connexion perdue", Toast.LENGTH_SHORT).show()
         // Optionally, navigate back to a specific activity or show a UI element to inform the user
+        // affiche l'écran avec les boutons de reconnexion HC-05 / ESP32
         onBluetoothConnectionFailed("Connexion perdue")
-        setContentView(R.layout.activity_loading)
     }
 
 
@@ -358,6 +373,17 @@ class MainActivity : AppCompatActivity() {
             //mettre à jour le compteur dans ESP32
             Log.d("------", "nouveau programme reçu ----  $message")
             Log.d("------", " messageBT inicial EEPROM --- $messageBT")
+            // la reprogrammation est validée : on efface maintenant l'ancienne
+            // programmation de cette zone et on floute son image
+            zone?.toIntOrNull()?.let { numZone ->
+                effacerValeurEnMemoire(numZone)
+                when (numZone) {
+                    1 -> findViewById<ImageView>(R.id.imageView1).setImageResource(R.drawable.potagerfiltre)
+                    2 -> findViewById<ImageView>(R.id.imageView2).setImageResource(R.drawable.parkingfiltre)
+                    3 -> findViewById<ImageView>(R.id.imageView3).setImageResource(R.drawable.portillonfiltre)
+                    4 -> findViewById<ImageView>(R.id.imageView4).setImageResource(R.drawable.grandtourfiltre)
+                }
+            }
             // trim() indispensable pour concaténer correctement les 2 strings
             message = messageBT.trim() + (message ?: "").trim()
             // messageBT  += message.toString() //ajout des autres  programmations
@@ -380,13 +406,32 @@ class MainActivity : AppCompatActivity() {
             }
             Log.d("---------------------", "  envoyé  >>> $messageBT")
             //    enregistrer le programme dans  HC-05
-            bluetoothManager.sendMessage(messageBT)
-            Toast.makeText(this, "Programme enregistré", Toast.LENGTH_SHORT).show()
+            val aEnvoyer = messageBT
+            lifecycleScope.launch {
+                if (envoyer(aEnvoyer)) {
+                    Toast.makeText(this@MainActivity, "Programme enregistré", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
 
     private fun processResponse(response: String) {
+        // une réponse incomplète ou mal formée ne doit pas faire planter l'application
+        try {
+            analyserReponse(response)
+        } catch (e: RuntimeException) {
+            // StringIndexOutOfBoundsException, NumberFormatException...
+            Log.e("processResponse", "Réponse ESP32 illisible : $response", e)
+            Toast.makeText(
+                this,
+                "Réponse de l'ESP32 incomplète, programmes non affichés",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    private fun analyserReponse(response: String) {
         var debut: String
         var duree: String
         var txt = " "
@@ -412,8 +457,9 @@ class MainActivity : AppCompatActivity() {
          endIndex = response.indexOf("%")
         if (endIndex != -1) {
             val ajusterValeur = response.substring(startIndex , endIndex)
-            val x = (ajusterValeur.toFloat() * 100).toInt()
-            ajustement = x.toString()
+            ajusterValeur.trim().toFloatOrNull()?.let {
+                ajustement = (it * 100).toInt().toString()
+            }
             messageBT = response.substring(endIndex + 1)
         }
 
@@ -561,6 +607,20 @@ class MainActivity : AppCompatActivity() {
                     continuation.resume(Pair("", ""))
                 }
                 .create()
+
+            mnForcees.setOnEditorActionListener { v, actionId, event ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // Cacher le clavier
+                    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(v.windowToken, 0)
+                    
+                    // Donner le focus au bouton VALIDER du dialogue
+                    dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).requestFocus()
+                    true
+                } else {
+                    false
+                }
+            }
 
             dialog.setOnCancelListener {
                 continuation.resume(Pair("", ""))

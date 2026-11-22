@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -22,14 +23,6 @@ class ProgrammingActivity : AppCompatActivity() {
     private lateinit var layout2: ConstraintLayout
     private lateinit var layout3: ConstraintLayout
     private lateinit var timeUtils: TimeUtils
-    private var depart2mn: Int = 0
-    private var duration2: Int = 0
-    private var depart2s: Int = 0
-    private var depart3mn: Int = 0
-    private var duration3: Int = 0
-    private var depart3s: Int = 0
-    private var duree2: String = "0"
-    private var duree3: String = "0"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,85 +104,71 @@ class ProgrammingActivity : AppCompatActivity() {
         })
 
 //----------------------------------------------------
-programmationZone.setOnClickListener {
-//si on clique sur le titre on valid toutes les valeurs
+        programmationZone.setOnClickListener {
+            //si on clique sur le titre on valide toutes les valeurs
+            // Chaque champ est vérifié : en cas de valeur vide ou hors limites,
+            // on affiche l'erreur et on reste sur l'écran (pas de plantage, rien n'est envoyé)
+            val champs = listOf(
+                Triple(debut1h, debut1mn, editTextDuration1),
+                Triple(debut2h, debut2mn, findViewById<EditText>(R.id.duration2)),
+                Triple(debut3h, debut3mn, findViewById<EditText>(R.id.duration3)),
+            )
 
-Log.d("---------", "debut1h.text   ${debut1h.text}")
-            var depart3heure: String
-            var depart2heure: String
-            var debut3minute   : String
-            var debut2minute: String
-            var enclair  : String
-            var message  : String
+            var enclair = ""
+            var message = ""
+            for (i in 0 until nombreDeFois) {
+                val (champH, champMn, champDuree) = champs[i]
+                val heure = lireNombre(champH, 0, 23, "L'heure") ?: return@setOnClickListener
+                val minute = lireNombre(champMn, 0, 59, "Les minutes") ?: return@setOnClickListener
+                val duree = lireNombre(champDuree, 0, 999, "La durée") ?: return@setOnClickListener
 
-            var depart1heure : String=(debut1h.text.toString())
-            if(depart1heure.length == 1) depart1heure = "0$depart1heure"
-            var depart1s = timeUtils.convertToSeconds(depart1heure.toInt(), 1)
+                val departS = timeUtils.convertToSeconds(heure, 1) + timeUtils.convertToSeconds(minute, 0)
+                val dureeS = duree * 60
+                val hh = heure.toString().padStart(2, '0')
+                val mm = minute.toString().padStart(2, '0')
 
-            var debut1minute =   (debut1mn  .text.toString())
-            if(debut1minute.length ==1) debut1minute = "0$debut1minute"
-             val depart1mn = timeUtils.convertToSeconds(debut1minute.toInt(), 0)
-
-           // val duree1 = findViewById<TextView>(R.id.duration1).text.toString()
-            val duration1 = editTextDuration1.text.toString().toInt() * 60 // duration1 en s
-            depart1s += depart1mn
-            enclair = "arrosage à ${depart1heure}h$debut1minute pour ${editTextDuration1.text}mn "
-            message = "$zoneId/$depart1s/$duration1/0/&"
-
-            if (nombreDeFois > 1) {
-
-                depart2heure=   (debut2h  .text.toString())
-                if(depart2heure.length == 1) depart2heure = "0$depart2heure"
-                depart2s = timeUtils.convertToSeconds(depart2heure.toInt(), 1)
-
-               debut2minute =   (debut2mn  .text.toString())
-                if(debut2minute.length ==1) debut2minute = "0$debut2minute"
-                depart2mn = timeUtils.convertToSeconds(debut2minute.toInt(), 0)
-                depart2s += depart2mn
-                duree2 = findViewById<TextView>(R.id.duration2).text.toString()
-                duration2 = duree2.toInt() * 60
-
-                enclair = "$enclair \net  à  ${depart2heure}h$debut2minute pour ${duree2}mn"
-                message = "$zoneId/$depart1s/$duration1/0/&$zoneId/$depart2s/$duration2/1/&"
+                enclair = when (i) {
+                    0 -> "arrosage à ${hh}h$mm pour ${duree}mn "
+                    1 -> "$enclair \net  à  ${hh}h$mm pour ${duree}mn"
+                    else -> "$enclair  et à  ${hh}h$mm pour ${duree}mn"
+                }
+                // i = 0, 1, 2 : numéro de l'arrosage dans la journée
+                message += "$zoneId/$departS/$dureeS/$i/&"
             }
-
-            if (nombreDeFois == 3) {
-
-                depart3heure=   (debut3h  .text.toString())
-                if(depart3heure.length == 1) depart3heure = "0$depart3heure"
-                depart3s = timeUtils.convertToSeconds(depart3heure.toInt(), 1)
-
-                debut3minute =   (debut3mn  .text.toString())
-                if(debut3minute.length ==1) debut3minute = "0$debut3minute"
-                depart3mn = timeUtils.convertToSeconds(debut3minute.toInt(), 0)
-
-                duree3 = findViewById<TextView>(R.id.duration3).text.toString()
-                duration3 = duree3.toInt() * 60
-                depart3s += depart3mn
-                enclair = "$enclair  et à  ${depart3heure}h$debut3minute pour ${duree3}mn"
-                message = "$zoneId/$depart1s/$duration1/0/&$zoneId/$depart2s/$duration2/1/&$zoneId/$depart3s/$duration3/2/&"
-            }
-
 
             Log.d("----------------------", "enclair  $enclair")
             Log.d("--------------", "message $message")
-                //  message   34570$1/34680/300/2/&2/36680/100/1/&
-                // 34570 = nombre de secondes depuis minuit
-                //  1,2,3,4 nombre de relais
-                // par ex 34680 heure du départ en secondes depuis minuit
-                // 300 durée arrosage en secondes
-                // 1,2,3 nombre de fois par relais
-                //& sépare les blocs de commandes pour chaque relai
-                // Set result and finish when done
-                val resultIntent = Intent().apply {
-                    putExtra("ZONE", zoneId.toString())
-                    putExtra("MESSAGE", message)
-                    putExtra("ENCLAIR", enclair)
-                }
-                setResult(RESULT_OK, resultIntent)
-               finish()
+            //  message   34570$1/34680/300/2/&2/36680/100/1/&
+            // 34570 = nombre de secondes depuis minuit
+            //  1,2,3,4 nombre de relais
+            // par ex 34680 heure du départ en secondes depuis minuit
+            // 300 durée arrosage en secondes
+            // 0,1,2 numéro de l'arrosage pour ce relais
+            //& sépare les blocs de commandes pour chaque relai
+            val resultIntent = Intent().apply {
+                putExtra("ZONE", zoneId.toString())
+                putExtra("MESSAGE", message)
+                putExtra("ENCLAIR", enclair)
             }
+            setResult(RESULT_OK, resultIntent)
+            finish()
         }
-
     }
 
+    /**
+     * Lit un nombre entier dans [champ] et vérifie qu'il est entre [min] et [max].
+     * Renvoie null (et signale l'erreur sur le champ) si la valeur est vide ou invalide.
+     */
+    private fun lireNombre(champ: EditText, min: Int, max: Int, libelle: String): Int? {
+        val valeur = champ.text.toString().trim().toIntOrNull()
+        if (valeur == null || valeur < min || valeur > max) {
+            val erreur = "$libelle doit être entre $min et $max"
+            champ.error = erreur
+            champ.requestFocus()
+            Toast.makeText(this, erreur, Toast.LENGTH_SHORT).show()
+            return null
+        }
+        return valeur
+    }
+
+}

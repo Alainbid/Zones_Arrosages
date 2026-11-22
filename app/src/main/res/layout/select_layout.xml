@@ -83,6 +83,7 @@
             android:layout_marginTop="8dp"
             android:autofillHints="01"
             android:digits="0123456789"
+            android:imeOptions="actionDone"
             android:inputType="numberDecimal"
             android:selectAllOnFocus="true"
             android:textAlignment="center"

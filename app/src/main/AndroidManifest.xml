@@ -11,9 +11,13 @@
         android:roundIcon="@mipmap/alstroemer500x500"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ProgrammingActivity" />
+        <!-- portrait : tourner le téléphone ne relance plus la connexion
+             Bluetooth et ne perd plus la saisie en cours -->
+        <activity android:name=".ProgrammingActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

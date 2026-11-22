@@ -33,6 +33,12 @@ import kotlin.coroutines.resume
 var messageBT = ""
 private var ajustement = "000"
 
+// limites des saisies avant envoi à l'ESP32
+private const val AJUSTEMENT_MIN = 1     // ajustement saisonnier en %
+private const val AJUSTEMENT_MAX = 300
+private const val MANUEL_MIN = 1         // durée de l'arrosage manuel en mn
+private const val MANUEL_MAX = 60
+
 class MainActivity : AppCompatActivity() {
 
     private var deviceName = "ESP32 Bluetooth"
@@ -247,10 +253,18 @@ class MainActivity : AppCompatActivity() {
                 // "%" comme caractère initial
                 // Use a coroutine to wait for the dialog response
                 lifecycleScope.launch {
-                    val deb = showInputDialog(this@MainActivity)
+                    val deb = showInputDialog(this@MainActivity).trim()
                     Log.d("---------deb --", deb)
-                    if (deb == "" || deb == "000" || deb == "00" || deb == "0") {
+                    val valeur = deb.toIntOrNull()
+                    if (deb.isEmpty() || valeur == 0) {
                         Toast.makeText(this@MainActivity, "Annulation", Toast.LENGTH_SHORT).show()
+                    } else if (valeur == null || valeur !in AJUSTEMENT_MIN..AJUSTEMENT_MAX) {
+                        // rien n'est envoyé à l'ESP32
+                        Toast.makeText(
+                            this@MainActivity,
+                            "ANNULATION... L'ajustement doit être entre $AJUSTEMENT_MIN et $AJUSTEMENT_MAX %",
+                            Toast.LENGTH_LONG
+                        ).show()
                     } else {
                         val adjustedValue = "%$deb"
                         Log.d("---------deb --", adjustedValue)
@@ -263,9 +277,20 @@ class MainActivity : AppCompatActivity() {
 
             R.id.manuel -> {
                 lifecycleScope.launch {
-                    val (quelleZone, duree) = showSelectDialog(this@MainActivity)
+                    val (quelleZone, saisie) = showSelectDialog(this@MainActivity)
+                    val duree = saisie.trim()
+                    val minutes = duree.toIntOrNull()
 
-                    if (quelleZone.isNotEmpty() && duree.isNotEmpty()) {
+                    if (quelleZone.isEmpty() || duree.isEmpty()) {
+                        Toast.makeText(this@MainActivity, "ANNULATION...Choisir une zone et une durée", Toast.LENGTH_LONG).show()
+                    } else if (minutes == null || minutes !in MANUEL_MIN..MANUEL_MAX) {
+                        // rien n'est envoyé à l'ESP32
+                        Toast.makeText(
+                            this@MainActivity,
+                            "ANNULATION... La durée doit être entre $MANUEL_MIN et $MANUEL_MAX mn",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else {
                         val adjustedValue = "m$quelleZone$duree"
                         Log.d("--------- quelle Zone --", adjustedValue)
 
@@ -273,8 +298,6 @@ class MainActivity : AppCompatActivity() {
                         if (envoyer(adjustedValue)) {
                             Toast.makeText(this@MainActivity, "Arrosage manuel lancé", Toast.LENGTH_SHORT).show()
                         }
-                    } else {
-                        Toast.makeText(this@MainActivity, "ANNULATION...Choisir une zone et une durée", Toast.LENGTH_LONG).show()
                     }
                 }
                 return true
